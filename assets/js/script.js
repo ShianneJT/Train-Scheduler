@@ -1,15 +1,8 @@
-// Train Name:
-// Destination:
-// First Train Time (HH:mm - military time):
-// Frequency (min)
-// User Input:
-// Takes train name, destination, first train time, and frequency
-// Calculate when the next train will arrive, relative to the current time
-// Users should see same train times
-// Sends data to firebasae
-// Appends data to the table
-
 $(document).ready(function() {
+
+// TODO
+// -Form validation
+
 // Firebase Setup
     var firebaseConfig = {
         apiKey: "AIzaSyDkKUaV-VjudXJCiQwRet7NOqqZNt2z83M",
@@ -19,63 +12,60 @@ $(document).ready(function() {
         storageBucket: "train-scheduler-fc51c.appspot.com",
         messagingSenderId: "843890443792",
         appId: "1:843890443792:web:ce7f423533ce4b29ed2c95"
-      };
+    };
 
 // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
-    // var database = firebase.database();
+    var database = firebase.database();
 
-    // Submit button onclick function
+// Submit button onclick function
     $('#submit-button').click(function(event) {
         event.preventDefault();
-    
-        // Takes users input and assigns it to a variable
-        var trainName = $('#train-name-input').val().trim();
-        var trainDestination = $('#destination-input').val().trim();
-        var trainFirstTime = $('#first-train-time-input').val().trim();
-        var trainFrequency = $('#frequency-input').val().trim();
 
-        console.log(trainName);
-        console.log(trainDestination);
-        console.log(trainFirstTime);
-        console.log(trainFrequency);
+    // Takes users input and assigns it to a variable
+        var trainName = $('#trainName').val().trim();
+        var trainDestination = $('#destination').val().trim();
+        var firstTrain = $('#firstTrain').val().trim();
+        var trainFrequency = $('#frequency').val().trim();
 
-        // Creates an object to hold all the train information
-        var trainObj = {
+    // Upload to database
+        database.ref().push({
             name: trainName,
             destination: trainDestination,
-            first: trainFirstTime,
+            first: firstTrain,
             frequency: trainFrequency
-        };
+        });
 
-        console.log(trainObj.name);
-        console.log(trainObj.destination);
-        console.log(trainObj.first);
-        console.log(trainObj.frequency);
+    // Clear the input fields
+    $('#trainName', '#destination', '#firstTrain', '#frequency').val("");
 
-        // Upload to database
+    }); // End of submit button
+
+    database.ref().on('child_added', function(childSnapshot) {
+        var firstTrainTime = moment(childSnapshot.val().first, 'hh:mm').subtract(1, 'years');
+        console.log('First train time: ' + firstTrainTime);
+
+        var timeDiff = moment().diff(moment(firstTrainTime), 'minutes');
+        console.log('Time difference: ' + timeDiff);
+
+        var remainder = timeDiff % childSnapshot.val().frequency;
+        console.log('Remainder: ' + remainder);
+
+        var minAway = childSnapshot.val().frequency;
+        console.log('Minutes Away: ' + minAway);
+
+        var nextTrainTime = moment().add(minAway, 'minutes');
+        nextTrainTime = moment(nextTrainTime).format('hh:mm');
+        console.log('Next Train Time: ' + nextTrainTime);
 
         // Add row to table
-// Need to add minutes way -----------------------------------------------------
-        $('#train-row').append('<tr><td>' + trainObj.name + '</td>' +
-            '<td>' + trainObj.destination + '</td>' + '<td>' + trainObj.first + '</td>' +
-            '<td>' + trainObj.frequency + '</td></tr>');
-
-
-        // Clear the input fields
-        $('#train-name-input').val('');
-        $('#destination-input').val('');
-        $('#first-train-time-input').val('');
-        $('#frequency-input').val('');
+        $('#train-row').append('<tr><td>' + childSnapshot.val().name +
+        '</td><td>' + childSnapshot.val().destination +
+        '</td><td>' + childSnapshot.val().frequency +
+        '</td><td>' + childSnapshot.val().nextTrainTime +
+        '</td><td>' + childSnapshot.val().minAway +
+        '</td></tr>');
     });
 
-
-
-}) // End of $(document).ready(function()
-
-// TODO
-// -Form validation
-// add data to the table
-// -moment.js
-// - 
+}); // End of $(document).ready(function()
