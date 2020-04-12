@@ -52,7 +52,7 @@ $(document).ready(function() {
         var remainder = timeDiff % childSnapshot.val().frequency;
         console.log('Remainder: ' + remainder);
 
-        var minAway = childSnapshot.val().frequency;
+        var minAway = childSnapshot.val().frequency - remainder;
         console.log('Minutes Away: ' + minAway);
 
         var nextTrainTime = moment().add(minAway, 'minutes');
@@ -63,8 +63,8 @@ $(document).ready(function() {
         $('#train-row').append('<tr><td>' + childSnapshot.val().name +
         '</td><td>' + childSnapshot.val().destination +
         '</td><td>' + childSnapshot.val().frequency +
-        '</td><td>' + childSnapshot.val().nextTrainTime +
-        '</td><td>' + childSnapshot.val().minAway +
+        '</td><td>' + nextTrainTime +
+        '</td><td>' + minAway +
         '</td></tr>');
     });
 
