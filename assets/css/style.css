@@ -1,13 +1,55 @@
 * {
     box-sizing: border-box;
   }
+
+body {
+  background-color: #f4f9ff;
+  font-family: 'Muli', sans-serif;
+}
   
 .jumbotron {
   text-align: center;
+  background-color: #00203FFF;
+  color: #ADEFD1FF;
 }
 
+/* Input Card */
 .input-card {
   margin-bottom: 20px;
 }
 
+.card-header {
+  background-color: #00203FFF;
+  color: #ADEFD1FF;
+}
 
+/* This removes the annoying line above the table */
+.table > thead > tr:first-child > th {
+  border: none;
+}
+
+th {
+  font-weight: bold;
+  border: none;
+}
+
+#submit-button {
+  background-color: #00203FFF;
+  color: #ADEFD1FF;
+}
+
+#submit-button:hover {
+  background-color: #334c65;
+}
+
+input:hover {
+  box-shadow: 0 0 5px rgba(51, 76, 101, 1);
+  border: 1px solid rgba(51, 76, 101, 1);
+  background-position: 0 0;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 5px rgba(51, 76, 101, 1);
+  border: 1px solid rgba(51, 76, 101, 1);
+  background-position: 0 0;
+}

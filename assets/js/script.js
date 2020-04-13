@@ -1,8 +1,4 @@
 $(document).ready(function() {
-
-// TODO
-// -Form validation
-
 // Firebase Setup
     var firebaseConfig = {
         apiKey: "AIzaSyDkKUaV-VjudXJCiQwRet7NOqqZNt2z83M",
@@ -16,7 +12,6 @@ $(document).ready(function() {
 
 // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
     var database = firebase.database();
 
 // Submit button onclick function
@@ -40,7 +35,7 @@ $(document).ready(function() {
     // Clear the input fields
     $('#trainName', '#destination', '#firstTrain', '#frequency').val("");
 
-    }); // End of submit button
+    }); // End of submit button function
 
     database.ref().on('child_added', function(childSnapshot) {
         var firstTrainTime = moment(childSnapshot.val().first, 'hh:mm').subtract(1, 'years');
@@ -59,7 +54,7 @@ $(document).ready(function() {
         nextTrainTime = moment(nextTrainTime).format('hh:mm');
         console.log('Next Train Time: ' + nextTrainTime);
 
-        // Add row to table
+        // Add row with data to the table
         $('#train-row').append('<tr><td>' + childSnapshot.val().name +
         '</td><td>' + childSnapshot.val().destination +
         '</td><td>' + childSnapshot.val().frequency +
