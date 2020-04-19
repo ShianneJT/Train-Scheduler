@@ -39,20 +39,15 @@ $(document).ready(function() {
 
     database.ref().on('child_added', function(childSnapshot) {
         var firstTrainTime = moment(childSnapshot.val().first, 'hh:mm').subtract(1, 'years');
-        console.log('First train time: ' + firstTrainTime);
 
         var timeDiff = moment().diff(moment(firstTrainTime), 'minutes');
-        console.log('Time difference: ' + timeDiff);
 
         var remainder = timeDiff % childSnapshot.val().frequency;
-        console.log('Remainder: ' + remainder);
 
         var minAway = childSnapshot.val().frequency - remainder;
-        console.log('Minutes Away: ' + minAway);
 
         var nextTrainTime = moment().add(minAway, 'minutes');
         nextTrainTime = moment(nextTrainTime).format('hh:mm');
-        console.log('Next Train Time: ' + nextTrainTime);
 
         // Add row with data to the table
         $('#train-row').append('<tr><td>' + childSnapshot.val().name +
